@@ -22,6 +22,7 @@ type Config struct {
 	CORS  CORS  `envPrefix:"CORS_"`
 	CSRF  CSRF  `envPrefix:"CSRF_"`
 	SMTP  SMTP  `envPrefix:"SMTP_"`
+	AWS   AWS   `envPrefix:"AWS_"`
 }
 
 type MySQL struct {
@@ -30,6 +31,7 @@ type MySQL struct {
 	User     string `env:"USER"`
 	Password string `env:"PASSWORD"`
 	DBName   string `env:"DATABASE"`
+	IAMAuth  bool   `env:"IAM_AUTH" envDefault:"false"`
 }
 type OAuth struct {
 	Google           Client `envPrefix:"GOOGLE_"`
@@ -58,6 +60,10 @@ type SMTP struct {
 	User     string `env:"USER" envDefault:"user"`
 	Port     int    `env:"PORT" envDefault:"587"`
 	Password string `env:"PASSWORD" envDefault:"passwd"`
+}
+
+type AWS struct {
+	Region string `env:"REGION" envDefault:"ap-northeast-1"`
 }
 
 const (

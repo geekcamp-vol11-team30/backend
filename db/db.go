@@ -6,11 +6,27 @@ import (
 	"fmt"
 	"time"
 
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/rds/auth"
 	"github.com/geekcamp-vol11-team30/backend/config"
 	"go.uber.org/zap"
 )
 
 func NewDB(cfg *config.Config, logger *zap.Logger) (*sql.DB, error) {
+	password := cfg.MySQL.Password
+	ctx := context.Background()
+	if cfg.MySQL.IAMAuth {
+		awscfg, err := awsconfig.LoadDefaultConfig(ctx)
+		if err != nil {
+			logger.Error("failed to load aws config", zap.Error(err))
+			return nil, err
+		}
+		authenticationToken, err := auth.BuildAuthToken(ctx, cfg.MySQL.Host, cfg.AWS.Region, cfg.MySQL.User, awscfg.Credentials)
+		if err != nil {
+			panic("failed to create authentication token: " + err.Error())
+		}
+		password = authenticationToken
+	}
 	// config := mysql.NewConfig()
 	// config.Net = "tcp"
 	// config.Addr = fmt.Sprintf("%s:%d", cfg.MySQL.Host, cfg.MySQL.Port)
@@ -26,7 +42,7 @@ func NewDB(cfg *config.Config, logger *zap.Logger) (*sql.DB, error) {
 		fmt.Sprintf(
 			"%s:%s@tcp(%s:%d)/%s?parseTime=true&multiStatements=true",
 			// "%s:%s@%s:%d/%s?parseTime=true",
-			cfg.MySQL.User, cfg.MySQL.Password, cfg.MySQL.Host,
+			cfg.MySQL.User, password, cfg.MySQL.Host,
 			cfg.MySQL.Port, cfg.MySQL.DBName,
 		),
 	)

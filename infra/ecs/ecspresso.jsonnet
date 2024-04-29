@@ -2,8 +2,7 @@
   region: 'ap-northeast-1',
   cluster: 'magische-{{ must_env `ENV` }}',
   service: 'magische-{{ must_env `ENV` }}-api',
-  // service_definition: 'test/ecs-service-def.jsonnet',
-  service_definition: '',
+  service_definition: 'ecs-service-def.jsonnet',
   task_definition: 'ecs-task-def.jsonnet',
   timeout: '10m0s',
   plugins: [

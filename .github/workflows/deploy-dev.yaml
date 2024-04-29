@@ -121,4 +121,5 @@ jobs:
           IMAGE_NAME: ${{ needs.build-and-push.outputs.ecr_image_name }}
           CPU: 256
           MEMORY: 512
-          CPU_ARCHITECTURE: ARM64
+          CPU_ARCHITECTURE: X86_64 # ARM64
+          MYSQL_IAM_AUTH: true

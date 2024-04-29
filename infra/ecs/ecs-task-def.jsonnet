@@ -59,6 +59,10 @@
           value: '{{ tfstate `output.rds_db_name` }}',
         },
         {
+          name: 'MYSQL_IAM_AUTH',
+          value: '{{ must_env `MYSQL_IAM_AUTH` }}',
+        },
+        {
           name: 'CSRF_DISABLED',
           value: 'true',
         },
@@ -123,14 +127,14 @@
       ],
     },
   ],
-  cpu: '{{ must_env `CPU` }}',
-  executionRoleArn: 'arn:aws:iam::905418376731:role/magische-{{ must_env `ENV` }}-api-server-task-exec',
-  family: 'magische-{{ must_env `ENV` }}-api',
+  cpu: '{{ must_env `CPU` }}',  // 変更OK
+  executionRoleArn: '{{ tfstate `module.base.aws_ecs_task_definition.api.execution_role_arn` }}',  // DO NOT CHANGE
+  family: '{{ tfstate `module.base.aws_ecs_task_definition.api.family` }}',  // DO NOT CHANGE
   ipcMode: '',
-  memory: '{{ must_env `MEMORY` }}',
-  networkMode: 'awsvpc',
+  memory: '{{ must_env `MEMORY` }}',  // 変更OK
+  networkMode: 'awsvpc',  // 変更する際はinfraも合わせて
   pidMode: '',
-  requiresCompatibilities: [
+  requiresCompatibilities: [  // 変更する際はinfraも合わせて
     'FARGATE',
   ],
   runtimePlatform: {
@@ -151,5 +155,5 @@
       value: 'magische-{{ must_env `ENV` }}-api-server',
     },
   ],
-  taskRoleArn: 'arn:aws:iam::905418376731:role/magische-{{ must_env `ENV` }}-api-server-task',
+  taskRoleArn: '{{ tfstate `module.base.aws_ecs_task_definition.api.task_role_arn` }}',  // DO NOT CHANGE
 }

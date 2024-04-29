@@ -21,7 +21,8 @@ func NewDB(cfg *config.Config, logger *zap.Logger) (*sql.DB, error) {
 			logger.Error("failed to load aws config", zap.Error(err))
 			return nil, err
 		}
-		authenticationToken, err := auth.BuildAuthToken(ctx, cfg.MySQL.Host, cfg.AWS.Region, cfg.MySQL.User, awscfg.Credentials)
+		endpoint := fmt.Sprintf("%s:%d", cfg.MySQL.Host, cfg.MySQL.Port)
+		authenticationToken, err := auth.BuildAuthToken(ctx, endpoint, cfg.AWS.Region, cfg.MySQL.User, awscfg.Credentials)
 		if err != nil {
 			panic("failed to create authentication token: " + err.Error())
 		}

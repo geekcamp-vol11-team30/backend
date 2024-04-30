@@ -122,4 +122,4 @@ jobs:
           CPU: 256
           MEMORY: 512
           CPU_ARCHITECTURE: ARM64
-          MYSQL_IAM_AUTH: true
+          MYSQL_IAM_AUTH: false
